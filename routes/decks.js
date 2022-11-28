@@ -7,11 +7,11 @@ router.get("/", decksController.getDecks);
 
 router.post("/", decksController.createDeck);
 
-router.get("/:id", decksController.getDeck);
+router.get("/:_id", decksController.getDeck);
 
-router.put("/:id", decksController.updateDeck);
+router.put("/:_id", decksController.updateDeck);
 
-router.delete("/:id", decksController.deleteDeck);
+router.delete("/:_id", decksController.deleteDeck);
 
 
 

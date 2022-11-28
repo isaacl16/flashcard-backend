@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const Card = require("./card")
 const { Schema } = mongoose
 
 
@@ -11,5 +12,17 @@ const deckSchema = new Schema({
         }
     ]
 })
+
+const removeLinkedDocuments = async (doc) => {
+    console.log("I'm in here")
+    console.log(doc)
+    Card.deleteMany({ _id: { $in: doc.cards } })
+        .catch((err) => {
+            console.log(err.message)
+        })
+}
+
+deckSchema.post('findOneAndRemove', removeLinkedDocuments)
+
 
 module.exports = deck = mongoose.model('Deck', deckSchema)
