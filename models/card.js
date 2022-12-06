@@ -3,8 +3,8 @@ const { Schema } = mongoose
 
 const cardSchema = new Schema({
     _id: Schema.Types.ObjectId,
-    header: { type: String, required: true },
-    description: { type: String, required: true, maxLength: 200 },
+    frontText: { type: String, required: true },
+    backText: { type: String, required: true },
 })
 
 module.exports = Card = mongoose.model('Card', cardSchema)

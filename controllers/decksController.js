@@ -5,23 +5,12 @@ const conn = require("../utils/mongoose")
 const { findById } = require("../models/card")
 
 exports.createDeck = async (req, res) => {
-    console.log(req.body)
-    // const deckData = {
-    //     name: "Test 1",
-    // }
-    // const cardsData = [{
-    //     header: "card 1",
-    //     description: "description 1"
-    // }, {
-    //     header: "card 2",
-    //     description: "description 2"
-    // }]
-    const reqData = req.body
+    const reqBody = req.body
     let session = await conn.startSession()
     try {
         session.startTransaction()
         let cardReferences = []
-        const cards = reqData.cards.map((card) => {
+        const cards = reqBody.cards.map((card) => {
             const _id = new mongoose.Types.ObjectId()
             cardReferences.push(_id)
             return {
@@ -32,7 +21,7 @@ exports.createDeck = async (req, res) => {
         await Card.insertMany(cards, { session: session })
         await Deck.create([{
             _id: new mongoose.Types.ObjectId(),
-            name: reqData.deck.name,
+            name: reqBody.deck.name,
             cards: cardReferences,
         }], { session: session })
         console.log("Deck Created")
@@ -68,6 +57,8 @@ exports.getDecks = async (req, res) => {
 }
 
 exports.updateDeck = async (req, res) => {
+    const _id = req.params._id
+    const reqBody = req.body
     console.log("updateDeck" + req.params.id)
     res.send("Update Deck")
 }
