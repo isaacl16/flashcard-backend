@@ -1,7 +1,7 @@
 const Deck = require("../models/deck")
 const Card = require("../models/card")
 const mongoose = require("mongoose")
-const conn = require("../utils/mongoose")
+const conn = require("../configs/mongoose")
 const { findById } = require("../models/card")
 
 exports.createDeck = async (req, res) => {
