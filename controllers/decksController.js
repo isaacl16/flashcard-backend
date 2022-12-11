@@ -1,7 +1,7 @@
 const Deck = require("../models/deck")
 const Card = require("../models/card")
 const mongoose = require("mongoose")
-const conn = require("../configs/mongoose")
+const conn = require("../db")
 const { findById, update } = require("../models/card")
 const card = require("../models/card")
 const deck = require("../models/deck")
@@ -186,20 +186,6 @@ exports.updateDeck = async (req, res) => {
             )
             console.log("Deck updated")
         }
-        // if (addCardReferences.length > 0 || deleteCardReferences.length > 0 || updateDeckName) {
-
-        //     await Deck.updateOne(
-        //         {
-        //             _id: _id,
-        //         },
-        //         {
-        //             deckName: { name: { $cond: [{ $neq: [updateDeckName, null] }, updateDeckName, "$name"] } },
-        //             $pullAll: { cards: deleteCardReferences },
-        //             $push: { cards: addCardReferences }
-        //         },
-        //         { session: session }
-        //     )
-        // }
         await session.commitTransaction()
 
     } catch (e) {
@@ -207,21 +193,24 @@ exports.updateDeck = async (req, res) => {
         session.abortTransaction()
     }
     session.endSession()
-    // console.log("this is the updated cards" + JSON.stringify(req.body.updatedCards))
     res.send("Update Deck")
 }
 
 exports.deleteDeck = async (req, res) => {
+    console.log("Deck delete")
     let session = await conn.startSession()
+    const _id = req.params._id
     try {
         session.startTransaction()
-        const _id = req.params._id
-        await Deck.findOneAndRemove({ _id: _id }, { session: session })
+        const deletedDeck = await Deck.findOneAndDelete({ _id: _id }, { session: session })
+        const deleteCards = deletedDeck.cards
+        await Card.deleteMany({ _id: { $in: deleteCards } })
         await session.commitTransaction()
         res.send("Deck Deleted")
 
     } catch (e) {
         await session.abortTransaction()
+        console.log(e.message)
         res.send("Failed to delete deck")
     }
     session.endSession()
