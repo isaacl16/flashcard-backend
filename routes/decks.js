@@ -9,7 +9,7 @@ router.post("/", decksController.createDeck);
 
 router.get("/:_id", decksController.getDeck);
 
-router.put("/:_id", decksController.updateDeck);
+router.patch("/:_id", decksController.updateDeck);
 
 router.delete("/:_id", decksController.deleteDeck);
 

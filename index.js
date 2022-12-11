@@ -15,7 +15,7 @@ const corsOptions = {
     },
 };
 
-app.use(cors(corsOptions))
+app.use(cors())
 
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json());
